@@ -1,7 +1,7 @@
 {
-  "name": "postcss-import",
-  "version": "8.2.0",
-  "description": "PostCSS plugin to import CSS files",
+  "name": "postcss-import-v9-fork",
+  "version": "9.0.0-beta.0",
+  "description": "Fork of postcss-import v9-dev with some fixes I need.",
   "keywords": [
     "css",
     "postcss",
