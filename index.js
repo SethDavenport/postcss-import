@@ -4,6 +4,7 @@ var postcss = require("postcss")
 var joinMedia = require("./lib/join-media")
 var resolveId = require("./lib/resolve-id")
 var loadContent = require("./lib/load-content")
+var processContent = require("./lib/process-content")
 var parseStatements = require("./lib/parse-statements")
 var promiseEach = require("promise-each")
 
@@ -227,11 +228,18 @@ function resolveImportId(
     : options.root
 
   return Promise.resolve(options.resolve(stmt.uri, base, options))
-  .then(function(resolved) {
-    if (!Array.isArray(resolved)) {
-      resolved = [ resolved ]
+  .then(function(paths) {
+    if (!Array.isArray(paths)) {
+      paths = [ paths ]
     }
 
+    return Promise.all(paths.map(function(file) {
+      // Ensure that each path is absolute:
+      if (!path.isAbsolute(file)) return resolveId(file, base, options)
+      return file
+    }))
+  })
+  .then(function(resolved) {
     // Add dependency messages:
     resolved.forEach(function(file) {
       result.messages.push({
@@ -261,6 +269,7 @@ function resolveImportId(
     }, [])
   })
   .catch(function(err) {
+    if (err.message.indexOf("Failed to find") !== -1) throw err
     result.warn(err.message, { node: atRule })
   })
 }
@@ -314,11 +323,12 @@ function loadImportContent(
       return
     }
 
-    return postcss(options.plugins).process(content, {
-      from: filename,
-      syntax: result.opts.syntax,
-      parser: result.opts.parser,
-    })
+    return processContent(
+      result,
+      content,
+      filename,
+      options
+    )
     .then(function(importedResult) {
       var styles = importedResult.root
       result.messages = result.messages.concat(importedResult.messages)

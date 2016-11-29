@@ -1,7 +1,7 @@
 {
-  "name": "postcss-import",
-  "version": "8.2.0",
-  "description": "PostCSS plugin to import CSS files",
+  "name": "postcss-import-v9-fork",
+  "version": "9.0.0-beta.0",
+  "description": "Fork of postcss-import v9-dev with some fixes I need.",
   "keywords": [
     "css",
     "postcss",
@@ -30,10 +30,8 @@
     "eslint": "^1.10.3",
     "eslint-config-i-am-meticulous": "^2.0.0",
     "npmpub": "^3.0.1",
-    "postcss-scss": "^0.1.3"
-  },
-  "optionalDependencies": {
-    "pkg-resolve": "^0.1.7"
+    "postcss-scss": "^0.1.3",
+    "sugarss": "^0.2.0"
   },
   "jspm": {
     "name": "postcss-import",
